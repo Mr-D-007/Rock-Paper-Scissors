@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}
+    Game Login Page
+{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+{% endblock %}
+{% block body %}
+<div class="wrapper" style="margin-top: 5%;">
+	<form id="login" action="checklogin" method="get">
+        <div class="form-field d-flex align-items-center">
+            <input style="text-align: center;" type="text" name="Name" id="Name" placeholder="Username"> 
+        </div>
+        <div class="form-field d-flex align-items-center">
+            <span class="fas fa-key"></span>
+            <input style="text-align: center;" type="text" name="password" id="pass" placeholder="Password">
+        </div>
+		<div style="font-size:20px;text-align:center">
+			<button class="btn mt-3" name='player' type="submit" value="Submit">
+				Login
+			</button>
+		</div>
+    </form>
+</div>
+{% if data == 0 %}
+<center><h1>Login successful</h1>
+<input type="submit" value="Proceed" onclick="location.href='{% url 'home' %}'"/></center>
+{% elif data == 1 %}
+<center>
+	<h1>Login Unsuccessful.Please try again</h1>
+</center>
+{% endif %}
+{% endblock %}

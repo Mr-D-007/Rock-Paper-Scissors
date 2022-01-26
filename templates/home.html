@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}
+    Game Home Page
+{% endblock %}
+{% block body %}
+  <h1 id='rst'>Waiting for Your Response...</h1>
+  <h1 style="position: absolute; margin-left:40%;" id='rock'></h1>
+  <div id="game-sec">
+  <img style="width: 15%;" src="../../static/rock.png" alt="rock">
+  <button id="but1" onclick="play('r')" type="button" class="btn btn-secondary">Rock</button>
+  <img style="width: 15%;" src="../../static/paper.png" alt="paper">
+  <button id="but2" onclick="play('p')" type="button" class="btn btn-secondary">Paper</button>
+  <img style="width: 15%;" src="../../static/scissor.png" alt="scissor">
+  <button id="but3" onclick="play('s')" type="button" class="btn btn-secondary">Scissor</button>
+  </div>
+  <h5>Instructions : </h5>
+  <p>Computer call will be shown on screen as :<br>
+    Rock = r <br>
+    Paper = p <br>
+    Scissor = s <br>
+  </p>
+<div id="score-sec">
+  <table>
+    <tr>
+      <th>Wins</th>
+      <th>Losses</th>
+    </tr>
+    <tr>
+      <td><p id="w">0</p></td>
+      <td><p id="l">0</p></td>
+    </tr>
+  </table>
+</div>
+{% endblock body %}
+{% block other %}
+  {% csrf_token %}
+  <script>
+    // <input type="hidden" name="csrfmiddlewaretoken" value="m5Zje67IMAZVjAnVDiY3C1T9e9CRZGL1MZXWUI0qPsws9cv3n2Lp9F28JvOKJLkW">
+    var rps = {
+      'r': 's',
+      'p': 'r',
+      's': 'p'
+    }
+    var gameStatus = [];
+    var first_click = false;
+    var w = l = 0;
+
+    function post(path, params, method='post') {
+      const form = document.createElement('form');
+      form.method = method;
+      form.action = path;
+
+      for (const key in params) {
+        if (params.hasOwnProperty(key)) {
+          const hiddenField = document.createElement('input');
+          hiddenField.type = 'hidden';
+          hiddenField.name = key;
+          hiddenField.value = params[key];
+
+          form.appendChild(hiddenField);
+        }
+      }
+
+      form.innerHTML += '{% csrf_token %}';
+
+      document.body.appendChild(form);
+
+      form.submit();
+    };
+
+    function choice() {
+      let num = Math.random() * 3;
+      return ['r', 'p', 's'][num - (num % 1)];
+    };
+
+    function createResult(userChoice) {
+      botChoice = choice()
+      document.getElementById('rock').innerHTML = botChoice;
+      if (rps[botChoice] == userChoice) {
+        gameStatus.push('l');
+        l++;
+        return 'lost'
+      } else if (botChoice == userChoice) {
+        gameStatus.push('d');
+        return 'draw'
+      } else {
+        gameStatus.push('w');
+        w++;
+        return 'won'
+      }
+    };
+
+    function showRst(message) {
+      document.getElementById('rst').innerHTML = message;
+      let letter = message[0]
+      if (letter != 'd') {
+        document.getElementById(letter).innerHTML = eval(letter);
+      }
+    };
+
+    function play(userChoice) {
+      let r = createResult(userChoice);
+      showRst(r);
+      check();  // goes to another page if conditions return true
+    };
+
+    function check() {
+      if (l == 3){
+        alert("You Lose this Round.");
+        post(document.URL, {data: gameStatus});
+      } else if (w == 3) {
+        alert("You Won this Round.");
+        post(document.URL, {data: gameStatus});
+      }
+    }
+  </script>
+{% endblock other %}

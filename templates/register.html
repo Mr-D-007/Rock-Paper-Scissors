@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}
+    Registration Page
+{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+{% endblock %}
+{% block body %}
+<main>
+    <div id="signup">
+        <div class="login-form"> 
+            <center><h1>Register Youself</h1></center>
+            <form action="check" method="get">
+            {% if err %}
+                <div class="alert alert-danger" role="alert">
+                    {{err}}
+                </div>
+            {% endif %}
+            <div class="form-row">
+                <center>
+                    <br><label for="name">Name</label>
+                    <br><input style="width: 20%;" type="text" class="form-control" name='Name' placeholder="Name" required>
+                    <br><label for="emailid">Email ID</label>
+                    <br><input style="width: 20%;" type="text" class="form-control"  name='MailID' id="mail" placeholder="user@gmail.com" required>
+                    <br><label for="password">Password</label>
+                    <br><input style="width: 20%;" type="text" class="form-control" name='password' id="pass" placeholder="" required>
+                    <br><div class="form-footer">
+                        <button name="player" value="Submit" type="submit" class="btn btn-primary btn-submit">Sign Up</button>
+                </center>
+            </div>
+            </form>
+        </div> 
+    </div>
+</main> 
+{% if data == 0 %}
+<center><h1>User already exists</h1>
+<p>Please Login</p>
+<input type="submit" value="Login" onclick="location.href='{% url 'login' %}'"/></center>
+{% elif data == 1 %}
+<center><h1>New User Login</h1>
+<input type="submit" value="Login" onclick="location.href='{% url 'login' %}'"/></center>
+{% endif %}
+{% endblock %}
